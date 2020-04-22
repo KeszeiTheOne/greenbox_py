@@ -2,20 +2,26 @@ from app.model import Sensor
 from app.exception import UnexpectedType
 
 class UpdateSensors:
-    def __init__(self, sensorNotifier, sensors):
+    def __init__(self, sensorNotifier, sensorProviders):
         self._sensorNotifier=sensorNotifier
-        self._sensors=sensors
+        self._sensorProviders=sensorProviders
 
     def update(self, request):
         if isinstance(request, UpdateSensorsRequest) == False:
             raise UnexpectedType()
 
-        self.__ensureSensors()
+        self._sensorNotifier.notify(self.__getSensors())
 
-        self._sensorNotifier.notify(self._sensors)
+    def __getSensors(self):
+        sensors=[]
+        for sensorProvider in self._sensorProviders:
+            sensors.append(sensorProvider.getSensor())
+        self.__ensureSensors(sensors)
 
-    def __ensureSensors(self):
-        for sensor in self._sensors:
+        return sensors
+
+    def __ensureSensors(self, sensors):
+        for sensor in sensors:
             if isinstance(sensor, Sensor) == False:
                 raise UnexpectedType()
 
