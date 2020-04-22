@@ -1,5 +1,6 @@
 class Sensor:
-    pass
+    name=None
+    value=None
 
 class SensorNotifier:
     def notify(self, sensors):

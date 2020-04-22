@@ -1,12 +1,26 @@
 import click
-from app.UpdateSensor import UpdateSensorAction
+from app.updateSesors import UpdateSensors
+from app.updateSesors import UpdateSensorsRequest
+from app.Emoncms.EmoncmsSensorNotifier import EmoncmsSensorNotifier
+from app.SensorProvider.DS18B20SensorProvider import DS18B20SensorProvider
+import yaml
 
 @click.command()
-@click.option('--count', default=1, help='Number of greetings.')
-@click.option('--name', prompt='Your name',
-              help='The person to greet.')
-def hello(count, name):
 
+def hello():
+    sensors = []
+    yamlSensors=None
+    with open("config/sensors.yml", 'r') as stream:
+        try:
+            yamlSensors=yaml.safe_load(stream)['sensors']
+        except yaml.YAMLError as exc:
+            print(exc)
+    for yamlSensor in yamlSensors:
+        if yamlSensor["type"]=="DS18B20":
+            sensors.append(DS18B20SensorProvider(yamlSensor))
+    updater = UpdateSensors(EmoncmsSensorNotifier(), sensors)
+
+    updater.update(UpdateSensorsRequest())
 
 if __name__ == '__main__':
     hello()
