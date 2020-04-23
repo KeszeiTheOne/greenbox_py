@@ -11,6 +11,7 @@ class DS18B20SensorProvider(SensorProvider):
         ds = DS18B20(self.sensorData["code"])
         t = ds.temperature()  # read temperature
         sensor.name=self.sensorData["name"]
+        sensor.group = self.sensorData["group"]
         sensor.value=t.C
 
         return sensor

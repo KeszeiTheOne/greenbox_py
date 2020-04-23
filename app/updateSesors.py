@@ -2,15 +2,16 @@ from app.model import Sensor
 from app.exception import UnexpectedType
 
 class UpdateSensors:
-    def __init__(self, sensorNotifier, sensorProviders):
-        self._sensorNotifier=sensorNotifier
+    def __init__(self, sensorGateway, sensorProviders):
+        self._sensorGateway=sensorGateway
         self._sensorProviders=sensorProviders
 
     def update(self, request):
         if isinstance(request, UpdateSensorsRequest) == False:
             raise UnexpectedType()
-
-        self._sensorNotifier.notify(self.__getSensors())
+        sensors = self.__getSensors()
+        self.__removeSensors(self.__getUnusedSensors(sensors))
+        self._sensorGateway.persistList(sensors)
 
     def __getSensors(self):
         sensors=[]
@@ -24,6 +25,25 @@ class UpdateSensors:
         for sensor in sensors:
             if isinstance(sensor, Sensor) == False:
                 raise UnexpectedType()
+
+    def __getUnusedSensors(self, sensors):
+        unusedSensors=[]
+        for filteredSensor in self._sensorGateway.filter({}):
+            if self.__existSensor(filteredSensor, sensors) == False:
+                unusedSensors.append(filteredSensor)
+
+        return unusedSensors
+
+    def __existSensor(self, filteredSensor, sensors):
+        for sensor in sensors:
+            if filteredSensor.name == sensor.name and filteredSensor.group == sensor.group:
+                return True
+
+        return False
+
+    def __removeSensors(self, sensors):
+        for sensor in sensors:
+            self._sensorGateway.remove(sensor)
 
 class UpdateSensorsRequest:
     pass

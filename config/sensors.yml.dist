@@ -1,0 +1,10 @@
+sensors:
+  - type: DS18B20
+    code: 28-00000800d250
+    group: greenbox
+    name: Bottom_water
+
+  - type: DS18B20
+    code: 28-00000800ba02
+    group: greenbox
+    name: Media_level

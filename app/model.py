@@ -1,6 +1,8 @@
 class Sensor:
+    id=None
     name=None
     value=None
+    group=None
 
 class SensorNotifier:
     def notify(self, sensors):

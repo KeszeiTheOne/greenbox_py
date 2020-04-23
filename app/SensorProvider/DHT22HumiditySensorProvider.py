@@ -9,11 +9,12 @@ class DHT22HumiditySensorProvider(SensorProvider):
     def getSensor(self):
         sensor=Sensor()
         sensor.name = self.sensorData["name"]
+        sensor.group = self.sensorData["group"]
         DHT_SENSOR = Adafruit_DHT.DHT22
         DHT_PIN = self.sensorData["pio"]
         humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
         if humidity is not None and temperature is not None:
-            sensor.value="{1:0.1f}".format(humidity)
+            sensor.value="{0:0.1f}".format(humidity)
         else:
             print("Failed to retrieve data from humidity sensor")
 
