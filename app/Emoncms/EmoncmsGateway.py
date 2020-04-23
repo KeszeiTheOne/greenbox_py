@@ -21,13 +21,21 @@ class EmoncmsSensorGateway(FilteringGateway):
         return sensors
 
     def persistList(self, list):
-        sensorData={}
+        sensorData=[]
         for sensor in list:
             if (sensor.group in sensorData) == False:
                 sensorData[sensor.group]={}
             sensorData[sensor.group][sensor.name]=sensor.value
-        for group, data in sensorData.items():
-            requests.post(self.parameters["emoncms_host"] + "/input/post?node="+ group +"&fulljson=" + json.dumps(data) + "&apikey="+ self.parameters["emoncms_api_key"])
+        data=[]
+        for group, asd in sensorData.items():
+            qwe=[0, group]
+            for name, asdasd in asd.items():
+                qwe.append({name: asdasd})
+            data.append(qwe)
+        requests.post(self.parameters["emoncms_host"] + "/input/bulk?data="+ json.dumps(data) + "&apikey="+ self.parameters["emoncms_api_key"])
+        #for group, data in sensorData.items():
+            #requests.post(self.parameters["emoncms_host"] + "/input/post?node="+ group +"&fulljson=" + json.dumps(data) + "&apikey="+ self.parameters["emoncms_api_key"])
+
 
     def remove(self, object):
         requests.get(self.parameters["emoncms_host"] + "/input/delete?inputid="+ object.id + "&apikey="+ self.parameters["emoncms_api_key"])
