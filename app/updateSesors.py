@@ -9,14 +9,36 @@ class UpdateSensors:
     def update(self, request):
         if isinstance(request, UpdateSensorsRequest) == False:
             raise UnexpectedType()
+        filteredSensors = self._sensorGateway.filter({})
         sensors = self.__getSensors()
-        self.__removeSensors(self.__getUnusedSensors(sensors))
+        self.__removeSensors(self.__getUnusedSensors(sensors, filteredSensors))
+
+        for sensor in sensors:
+            findSensor = self._sensorGateway.find({
+                'name': sensor.name,
+                'group': sensor.group
+            })
+            if null == sensor:
+                continue
+
+
         self._sensorGateway.persistList(sensors)
 
-    def __getSensors(self):
+    def __Sensors(self):
         sensors=[]
         for sensorProvider in self._sensorProviders:
-            sensors.append(sensorProvider.getSensor())
+            sensor = sensorProvider.getSensor()
+            findSensor = self._sensorGateway.find({
+                'name': sensor.name,
+                'group': sensor.group
+            })
+
+            if None != findSensor and (findSensor.value * float(0.9)) > sensor.value or (findSensor.value * float(1.1)) < sensor.value:
+                sensorOne = sensorProvider.getSensor()
+                sensorTwo = sensorProvider.getSensor()
+                sensor.value = (sensor.value + sensorOne.value + sensorTwo.value) / 3
+
+            sensors.append(sensor)
         self.__ensureSensors(sensors)
 
         return sensors
@@ -26,9 +48,9 @@ class UpdateSensors:
             if isinstance(sensor, Sensor) == False:
                 raise UnexpectedType()
 
-    def __getUnusedSensors(self, sensors):
+    def __getUnusedSensors(self, sensors, filteredSensors):
         unusedSensors=[]
-        for filteredSensor in self._sensorGateway.filter({}):
+        for filteredSensor in filteredSensors:
             if self.__existSensor(filteredSensor, sensors) == False:
                 unusedSensors.append(filteredSensor)
 
