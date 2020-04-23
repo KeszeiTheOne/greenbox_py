@@ -26,7 +26,7 @@ class EmoncmsSensorGateway(FilteringGateway):
             if (sensor.group in sensorData) == False:
                 sensorData[sensor.group]={}
             sensorData[sensor.group][sensor.name]=sensor.value
-        for group, data in sensorData:
+        for group, data in sensorData.items():
             requests.post(self.parameters["emoncms_host"] + "/input/post?node="+ group +"&fulljson=" + json.dumps(data) + "&apikey="+ self.parameters["emoncms_api_key"])
 
     def remove(self, object):
