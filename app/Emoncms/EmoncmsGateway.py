@@ -15,14 +15,16 @@ class EmoncmsSensorGateway(FilteringGateway):
             sensor.id=sensorData["id"]
             sensor.name=sensorData["name"]
             sensor.group=sensorData["nodeid"]
-            sensor.value=data["value"]
+            sensor.value=sensorData["value"]
             sensors.append(sensor)
 
         return sensors
 
     def persistList(self, list):
         sensorData={}
-        for sensor in sensors:
+        for sensor in list:
+            if (sensor.group in sensorData) == False:
+                sensorData[sensor.group]={}
             sensorData[sensor.group][sensor.name]=sensor.value
         for group, data in sensorData:
             requests.post(self.parameters["emoncms_host"] + "/input/post?node="+ group +"&fulljson=" + json.dumps(data) + "&apikey="+ self.parameters["emoncms_api_key"])
