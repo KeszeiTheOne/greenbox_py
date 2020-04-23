@@ -13,18 +13,9 @@ class UpdateSensors:
         sensors = self.__getSensors()
         self.__removeSensors(self.__getUnusedSensors(sensors, filteredSensors))
 
-        for sensor in sensors:
-            findSensor = self._sensorGateway.find({
-                'name': sensor.name,
-                'group': sensor.group
-            })
-            if null == sensor:
-                continue
-
-
         self._sensorGateway.persistList(sensors)
 
-    def __Sensors(self):
+    def __getSensors(self):
         sensors=[]
         for sensorProvider in self._sensorProviders:
             sensor = sensorProvider.getSensor()
@@ -33,9 +24,10 @@ class UpdateSensors:
                 'group': sensor.group
             })
 
-            if None != findSensor and (findSensor.value * float(0.9)) > sensor.value or (findSensor.value * float(1.1)) < sensor.value:
+            if None != findSensor and (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(sensor.value):
                 sensorOne = sensorProvider.getSensor()
                 sensorTwo = sensorProvider.getSensor()
+                print("asd")
                 sensor.value = (sensor.value + sensorOne.value + sensorTwo.value) / 3
 
             sensors.append(sensor)

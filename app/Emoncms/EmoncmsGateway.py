@@ -12,7 +12,7 @@ class EmoncmsSensorGateway(FilteringGateway):
         response = requests.get(self.parameters["emoncms_host"] + "/input/list?apikey="+ self.parameters["emoncms_api_key"])
         self.sensors=[]
         for sensorData in response.json():
-            sensors.append(self.__createSensor(sensorData))
+            self.sensors.append(self.__createSensor(sensorData))
 
         return self.sensors
 
@@ -31,7 +31,7 @@ class EmoncmsSensorGateway(FilteringGateway):
         requests.post(self.parameters["emoncms_host"] + "/input/bulk?data="+ json.dumps(data) + "&apikey="+ self.parameters["emoncms_api_key"])
 
     def find(self, id):
-        if isinstance(i, dict):
+        if isinstance(id, dict):
             for sensor in self.sensors:
                 if self.__equalProperty(id, 'name', sensor) and self.__equalProperty(id, 'group', sensor):
                     return sensor
