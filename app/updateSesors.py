@@ -24,10 +24,10 @@ class UpdateSensors:
                 'group': sensor.group
             })
 
-            #if None != findSensor and (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(sensor.value):
-            sensorOne = sensorProvider.getSensor()
-            sensorTwo = sensorProvider.getSensor()
-            sensor.value = (float(sensor.value) + float(sensorOne.value) + float(sensorTwo.value)) / 3
+            if None != findSensor and (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(sensor.value):
+                sensorOne = sensorProvider.getSensor()
+                sensorTwo = sensorProvider.getSensor()
+                sensor.value = (float(sensor.value) + float(sensorOne.value) + float(sensorTwo.value)) / 3
 
             sensors.append(sensor)
         self.__ensureSensors(sensors)
