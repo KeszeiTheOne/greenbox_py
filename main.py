@@ -29,6 +29,7 @@ def hello(type):
         parameters=None
         with open(abspath("config/parameters.yml"), 'r') as stream:
             try:
+                parameters=yaml.safe_load(stream)
                 gateway=EmoncmsSensorGateway(parameters)
             except yaml.YAMLError as exc:
                 print(exc)
