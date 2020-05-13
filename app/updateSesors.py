@@ -18,13 +18,15 @@ class UpdateSensors:
     def __getSensors(self):
         sensors=[]
         for sensorProvider in self._sensorProviders:
+            if sensorProvider is None:
+                continue
             sensor = sensorProvider.getSensor()
             findSensor = self._sensorGateway.find({
                 'name': sensor.name,
                 'group': sensor.group
             })
 
-            if None != findSensor and (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(sensor.value):
+            if None != findSensor and None != sensor and (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(sensor.value):
                 sensorOne = sensorProvider.getSensor()
                 sensorTwo = sensorProvider.getSensor()
                 sensor.value = (float(sensor.value) + float(sensorOne.value) + float(sensorTwo.value)) / 3
