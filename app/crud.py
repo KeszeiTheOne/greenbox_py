@@ -68,7 +68,9 @@ class PrintGateway():
         data=[]
         data.append(["ID","NAME","VALUE","GROUP"])
         for sensor in list:
-            data.append([sensor.id?sensor.id:"Empty", sensor.name ,sensor.value, sensor.group])
+            if sensor.id == None:
+                sensor.id="Empty"
+            data.append([sensor.id, sensor.name ,sensor.value, sensor.group])
 
         self.print_table(data)
 
