@@ -68,14 +68,14 @@ class PrintGateway():
         data=[]
         data.append(["ID","NAME","VALUE","GROUP"])
         for sensor in list:
-            data.append([sensor.id,sensor.name,sensor.value,sensor.group])
-            
+            data.append([sensor.id?sensor.id:"Empty", sensor.name ,sensor.value, sensor.group])
+
         self.print_table(data)
 
     def find(self, id):
         pass
 
-    def print_table(table):
+    def print_table(self, data):
         dash = '-' * 40
         for i in range(len(data)):
             if i == 0:
