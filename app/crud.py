@@ -12,11 +12,6 @@ except Exception as e:
     pass
 
 try:
-    from app.SensorProvider.DHT22HumiditySensorProvider import DHT22HumiditySensorProvider
-except Exception as e:
-    pass
-
-try:
     from app.SensorProvider.DHT22TemperatureSensorProvider import DHT22TemperatureSensorProvider
 except Exception as e:
     pass
@@ -44,8 +39,7 @@ class SensorProviderIterator():
     def __getProvider(self, yamlSensor):
         switcher = {
             "DS18B20": self.DS18B20ProviderFactory,
-            "DHT22-humidity": self.DHT22HumiditySensorProviderFactory,
-            "DHT22-temperature": self.DHT22TemperatureSensorProviderFactory
+            "DHT22": self.DHT22TemperatureSensorProviderFactory
         }
         func = switcher.get(yamlSensor["type"], lambda: "Invalid provider")
 
@@ -54,12 +48,6 @@ class SensorProviderIterator():
     def DS18B20ProviderFactory(self, data):
         try:
             return DS18B20SensorProvider(data)
-        except NameError as e:
-            return None
-
-    def DHT22HumiditySensorProviderFactory(self, data):
-        try:
-            return DHT22HumiditySensorProvider(data)
         except NameError as e:
             return None
 

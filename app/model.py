@@ -9,7 +9,9 @@ class SensorNotifier:
         pass
 
 class SensorProvider:
-    def getSensor(self):
+    def getSensors(self):
+        pass
+    def getSensorByName(self, name):
         pass
 
 class SensorIterator:

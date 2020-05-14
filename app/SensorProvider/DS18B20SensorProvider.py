@@ -6,7 +6,7 @@ class DS18B20SensorProvider(SensorProvider):
     def __init__(self, sensorData):
         self.sensorData=sensorData
 
-    def getSensor(self):
+    def getSensors(self):
         sensor=Sensor()
         ds = DS18B20(self.sensorData["code"])
         t = ds.temperature()  # read temperature
@@ -14,4 +14,7 @@ class DS18B20SensorProvider(SensorProvider):
         sensor.group = self.sensorData["group"]
         sensor.value=t.C
 
-        return sensor
+        return [sensor]
+        
+    def getSensorByName(self, name):
+        return self.getSensors()[0]
