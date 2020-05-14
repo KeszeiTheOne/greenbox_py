@@ -65,7 +65,22 @@ class PrintGateway():
         return []
 
     def persistList(self, list):
-        print(list)
+        data=[]
+        data.append(["ID","NAME","VALUE","GROUP"])
+        for sensor in list:
+            data.append([sensor.id,sensor.name,sensor.value,sensor.group])
+            
+        self.print_table(data)
 
     def find(self, id):
         pass
+
+    def print_table(table):
+        dash = '-' * 40
+        for i in range(len(data)):
+            if i == 0:
+              print(dash)
+              print('{:<10s}{:>4s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
+              print(dash)
+            else:
+              print('{:<10s}{:>4d}{:^12s}{:>12.1f}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
