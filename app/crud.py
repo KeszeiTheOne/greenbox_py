@@ -82,7 +82,7 @@ class PrintGateway():
         for i in range(len(data)):
             if i == 0:
               print(dash)
-              print('{:<10s}{:>4s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
+              print('{:<10s}{:>10s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
               print(dash)
             else:
-              print('{:<10s}{:>4d}{:^12s}{:>12.1f}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
+              print('{:<10s}{:>10d}{:^12.2f}{:>12s}'.format(data[i][0],float(data[i][1]),data[i][2],data[i][3]))
