@@ -1,7 +1,9 @@
-Adafruit-PlatformDetect==2.7.0
+Adafruit-Blinka==4.8.1
+adafruit-circuitpython-bmp280==3.2.1
+adafruit-circuitpython-busdevice==4.3.1
+Adafruit-PlatformDetect==2.11.1
 Adafruit-PureIO==1.1.5
 attrs==19.3.0
-bmp280==0.0.3
 certifi==2020.4.5.1
 chardet==3.0.4
 click==7.1.1

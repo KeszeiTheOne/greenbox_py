@@ -2,7 +2,9 @@ from app.model import SensorProvider
 import Adafruit_DHT
 from app.model import Sensor
 from sensor import DS18B20
-from bmp280 import BMP280
+import board
+import busio
+from adafruit_bmp280 import adafruit_bmp280
 
 class DHT22SensorProvider(SensorProvider):
     def __init__(self, sensorData):
@@ -61,15 +63,18 @@ class BMP280SensorProvider(SensorProvider):
 
     def getSensors(self):
         sensors=[]
-        bus = SMBus(1)
-        bmp280 = BMP280(i2c_dev=bus)
+        # Create library object using our Bus I2C port
+        i2c = busio.I2C(board.SCL, board.SDA)
+        bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
         if "config" in self.sensorData:
+            if "seaLevel" in self.sensorData["config"]:
+                bmp280.seaLevelhPa = self.sensorData["config"]["seaLevel"]
             if "read" in self.sensorData["config"]:
-                for readConfig in self.sensorData["config"]:
+                for readConfig in self.sensorData["config"]["read"]:
                     if readConfig == "temperature":
-                        sensors.append(self.__createSensor("temperature", bmp280.get_temperature()))
+                        sensors.append(self.__createSensor("temperature", bmp280.temperature))
                     elif readConfig == "pressure":
-                        sensors.append(self.__createSensor("pressure", bmp280.get_pressure()))
+                        sensors.append(self.__createSensor("pressure", bmp280.pressure)))
 
         return sensors
 
@@ -77,7 +82,7 @@ class BMP280SensorProvider(SensorProvider):
         sensor=Sensor()
         sensor.name = self.sensorData["name"]+"-"+type
         sensor.group = self.sensorData["group"]
-        sensor.value = "{:05.2f}".format(value)
+        sensor.value = "{%0.1f}".format(value)
 
         return sensor
 
