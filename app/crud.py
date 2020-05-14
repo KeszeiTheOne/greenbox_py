@@ -7,14 +7,19 @@ class FilteringGateway:
         pass
 
 try:
-    from app.SensorProvider.DS18B20SensorProvider import DS18B20SensorProvider
+    from app.SensorProvider import DS18B20SensorProvider
 except Exception as e:
-    pass
+    print(e)
 
 try:
-    from app.SensorProvider.DHT22TemperatureSensorProvider import DHT22TemperatureSensorProvider
+    from app.SensorProvider import DHT22SensorProvider
 except Exception as e:
-    pass
+    print(e)
+
+try:
+    from app.SensorProvider import BMP280SensorProvider
+except Exception as e:
+    print(e)
 
 
 class SensorProviderIterator():
@@ -39,7 +44,8 @@ class SensorProviderIterator():
     def __getProvider(self, yamlSensor):
         switcher = {
             "DS18B20": self.DS18B20ProviderFactory,
-            "DHT22": self.DHT22TemperatureSensorProviderFactory
+            "DHT22": self.DHT22SensorProviderFactory,
+            "BMP280": self.BMP280SensorProviderFactory
         }
         func = switcher.get(yamlSensor["type"], lambda: "Invalid provider")
 
@@ -52,9 +58,16 @@ class SensorProviderIterator():
             print(e)
             return None
 
-    def DHT22TemperatureSensorProviderFactory(self, data):
+    def DHT22SensorProviderFactory(self, data):
         try:
-            return DHT22TemperatureSensorProvider(data)
+            return DHT22SensorProvider(data)
+        except NameError as e:
+            print(e)
+            return None
+
+    def BMP280SensorProviderFactory(self, data):
+        try:
+            return BMP280SensorProvider(data)
         except NameError as e:
             print(e)
             return None
@@ -82,7 +95,7 @@ class PrintGateway():
         for i in range(len(data)):
             if i == 0:
               print(dash)
-              print('{:<10s}{:>10s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
+              print('{:<10s}{:<20s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
               print(dash)
             else:
-              print('{:<10s}{:>10d}{:^12.2f}{:>12s}'.format(data[i][0],float(data[i][1]),data[i][2],data[i][3]))
+              print('{:<10s}{:<20s}{:>12.2f}{:>12s}'.format(data[i][0],data[i][1],float(data[i][2]),data[i][3]))

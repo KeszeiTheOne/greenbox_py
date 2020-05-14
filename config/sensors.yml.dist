@@ -8,3 +8,5 @@ sensors:
     code: 28-00000800ba02
     group: greenbox
     name: Media_level
+    options:
+      read: []
