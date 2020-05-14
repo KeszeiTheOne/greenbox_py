@@ -21,7 +21,7 @@ class UpdateSensors:
             if sensorProvider is None:
                 continue
             providedSensors = sensorProvider.getSensors()
-                for sensor in providedSensors
+            for sensor in providedSensors
                 findSensor = self._sensorGateway.find({
                     'name': sensor.name,
                     'group': sensor.group
