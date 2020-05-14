@@ -24,7 +24,7 @@ class DHT22TemperatureSensorProvider(SensorProvider):
         for sensor in self.getSensors():
             if sensor.name == name:
                 return sensor
-                
+
         return None
 
     def __createSensor(self, type, value):

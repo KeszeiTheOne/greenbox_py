@@ -49,12 +49,14 @@ class SensorProviderIterator():
         try:
             return DS18B20SensorProvider(data)
         except NameError as e:
+            print(e)
             return None
 
     def DHT22TemperatureSensorProviderFactory(self, data):
         try:
             return DHT22TemperatureSensorProvider(data)
         except NameError as e:
+            print(e)
             return None
 
 class PrintGateway():
