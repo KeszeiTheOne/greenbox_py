@@ -74,7 +74,7 @@ class BMP280SensorProvider(SensorProvider):
                     if readConfig == "temperature":
                         sensors.append(self.__createSensor("temperature", bmp280.temperature))
                     elif readConfig == "pressure":
-                        sensors.append(self.__createSensor("pressure", bmp280.pressure)))
+                        sensors.append(self.__createSensor("pressure", bmp280.pressure))
 
         return sensors
 
