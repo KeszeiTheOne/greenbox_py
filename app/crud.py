@@ -2,9 +2,19 @@ class Updater:
     def update(self, data):
         pass
 
+    def persistList(self, list):
+        pass
+
+
 class FilteringGateway:
     def filter(self, criteria):
         pass
+
+
+class FinderGateway:
+    def find(self, id):
+        pass
+
 
 try:
     from app.SensorProvider import DS18B20SensorProvider
@@ -33,11 +43,11 @@ class SensorProviderIterator():
         return self
 
     def __next__(self):
-        if self.index >=self.count:
+        if self.index >= self.count:
             raise StopIteration
 
         yamlSensor = self.sensorParameters[self.index]
-        self.index+=1
+        self.index += 1
 
         return self.__getProvider(yamlSensor)
 
@@ -72,18 +82,19 @@ class SensorProviderIterator():
             print(e)
             return None
 
-class PrintGateway():
+
+class PrintGateway(FilteringGateway):
 
     def filter(self, criteria):
         return []
 
     def persistList(self, list):
-        data=[]
-        data.append(["ID","NAME","VALUE","GROUP"])
+        data = []
+        data.append(["ID", "NAME", "VALUE", "GROUP"])
         for sensor in list:
             if sensor.id == None:
-                sensor.id="Empty"
-            data.append([sensor.id, sensor.name ,sensor.value, sensor.group])
+                sensor.id = "Empty"
+            data.append([sensor.id, sensor.name, sensor.value, sensor.group])
 
         self.print_table(data)
 
@@ -94,8 +105,8 @@ class PrintGateway():
         dash = '-' * 40
         for i in range(len(data)):
             if i == 0:
-              print(dash)
-              print('{:<10s}{:<20s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
-              print(dash)
+                print(dash)
+                print('{:<10s}{:<20s}{:>12s}{:>12s}'.format(data[i][0], data[i][1], data[i][2], data[i][3]))
+                print(dash)
             else:
-              print('{:<10s}{:<20s}{:>12.2f}{:>12s}'.format(data[i][0],data[i][1],float(data[i][2]),data[i][3]))
+                print('{:<10s}{:<20s}{:>12.2f}{:>12s}'.format(data[i][0], data[i][1], float(data[i][2]), data[i][3]))

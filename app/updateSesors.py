@@ -1,13 +1,14 @@
 from app.model import Sensor
 from app.exception import UnexpectedType
 
+
 class UpdateSensors:
     def __init__(self, sensorGateway, sensorProviders):
-        self._sensorGateway=sensorGateway
-        self._sensorProviders=sensorProviders
+        self._sensorGateway = sensorGateway
+        self._sensorProviders = sensorProviders
 
     def update(self, request):
-        if isinstance(request, UpdateSensorsRequest) == False:
+        if not isinstance(request, UpdateSensorsRequest):
             raise UnexpectedType()
         filteredSensors = self._sensorGateway.filter({})
         sensors = self.__getSensors()
@@ -16,19 +17,20 @@ class UpdateSensors:
         self._sensorGateway.persistList(sensors)
 
     def __getSensors(self):
-        sensors=[]
+        sensors = []
         for sensorProvider in self._sensorProviders:
             if sensorProvider is None:
                 continue
-            providedSensors = sensorProvider.getSensors()
-            for sensor in providedSensors:
+            providedsensors = sensorProvider.getSensors()
+            for sensor in providedsensors:
                 findSensor = self._sensorGateway.find({
                     'name': sensor.name,
                     'group': sensor.group
                 })
 
-                if None != findSensor and None != sensor:
-                    if (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(sensor.value):
+                if findSensor is not None and sensor is not None:
+                    if (findSensor.value * float(0.9)) > float(sensor.value) or (findSensor.value * float(1.1)) < float(
+                            sensor.value):
                         sensorOne = sensorProvider.getSensorByName(sensor.name)
                         sensorTwo = sensorProvider.getSensorByName(sensor.name)
                         sensor.value = (float(sensor.value) + float(sensorOne.value) + float(sensorTwo.value)) / 3
@@ -40,13 +42,13 @@ class UpdateSensors:
 
     def __ensureSensors(self, sensors):
         for sensor in sensors:
-            if isinstance(sensor, Sensor) == False:
+            if not isinstance(sensor, Sensor):
                 raise UnexpectedType()
 
     def __getUnusedSensors(self, sensors, filteredSensors):
-        unusedSensors=[]
+        unusedSensors = []
         for filteredSensor in filteredSensors:
-            if self.__existSensor(filteredSensor, sensors) == False:
+            if not self.__existSensor(filteredSensor, sensors):
                 unusedSensors.append(filteredSensor)
 
         return unusedSensors
@@ -61,6 +63,7 @@ class UpdateSensors:
     def __removeSensors(self, sensors):
         for sensor in sensors:
             self._sensorGateway.remove(sensor)
+
 
 class UpdateSensorsRequest:
     pass

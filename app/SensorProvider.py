@@ -4,14 +4,15 @@ from app.model import Sensor
 from sensor import DS18B20
 import board
 import busio
-from adafruit_bmp280 import adafruit_bmp280
+import adafruit_bmp280
+
 
 class DHT22SensorProvider(SensorProvider):
     def __init__(self, sensorData):
-        self.sensorData=sensorData
+        self.sensorData = sensorData
 
     def getSensors(self):
-        sensors=[]
+        sensors = []
 
         DHT_SENSOR = Adafruit_DHT.DHT22
         DHT_PIN = self.sensorData["pio"]
@@ -32,37 +33,39 @@ class DHT22SensorProvider(SensorProvider):
         return None
 
     def __createSensor(self, type, value):
-        sensor=Sensor()
-        sensor.name = self.sensorData["name"]+"-"+type
+        sensor = Sensor()
+        sensor.name = self.sensorData["name"] + "-" + type
         sensor.group = self.sensorData["group"]
         sensor.value = "{0:0.1f}".format(value)
 
         return sensor
 
+
 class DS18B20SensorProvider(SensorProvider):
     def __init__(self, sensorData):
-        self.sensorData=sensorData
+        self.sensorData = sensorData
 
     def getSensors(self):
-        sensor=Sensor()
+        sensor = Sensor()
         ds = DS18B20(self.sensorData["code"])
         t = ds.temperature()  # read temperature
-        sensor.name=self.sensorData["name"]
+        sensor.name = self.sensorData["name"]
         sensor.group = self.sensorData["group"]
-        sensor.value=t.C
+        sensor.value = t.C
 
         return [sensor]
 
     def getSensorByName(self, name):
         return self.getSensors()[0]
 
+
 class BMP280SensorProvider(SensorProvider):
 
     def __init__(self, sensorData):
-        self.sensorData=sensorData
+        self.sensorData = sensorData
 
     def getSensors(self):
-        sensors=[]
+        sensors = []
         # Create library object using our Bus I2C port
         i2c = busio.I2C(board.SCL, board.SDA)
         bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
@@ -79,10 +82,10 @@ class BMP280SensorProvider(SensorProvider):
         return sensors
 
     def __createSensor(self, type, value):
-        sensor=Sensor()
-        sensor.name = self.sensorData["name"]+"-"+type
+        sensor = Sensor()
+        sensor.name = self.sensorData["name"] + "-" + type
         sensor.group = self.sensorData["group"]
-        sensor.value = "{%0.1f}".format(value)
+        sensor.value = "{:0.2f}".format(value)
 
         return sensor
 
