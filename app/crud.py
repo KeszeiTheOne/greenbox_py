@@ -83,7 +83,7 @@ class SensorProviderIterator():
             return None
 
 
-class PrintGateway(CrudGateway):
+class PrintGateway(FilteringGateway):
 
     def filter(self, criteria):
         return []
